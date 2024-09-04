@@ -1,14 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { FaTrash } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 
 interface Props {}
 
 const Page: React.FC<Props> = ({}) => {
   const [input, setInput] = useState<string>();
+  const [line, setLine] = useState(false);
   const [todoArray, setTodoArr] = useState<string[]>([""]);
-  const [current, setCurrent] = useState();
-  const array = [];
+  const [current, setCurrent] = useState<number | undefined>();
+  const arr: string[] = [];
 
   return (
     <div className=" bg-white text-black h-screen">
@@ -18,6 +19,7 @@ const Page: React.FC<Props> = ({}) => {
           type="text"
           onChange={(e) => setInput(e.target.value)}
           value={input}
+          placeholder="자신이 할 일을 적어보세요!"
         />
         <button
           className="mr-6 block border w-16"
@@ -30,8 +32,28 @@ const Page: React.FC<Props> = ({}) => {
         </button>
       </div>
       <div className="mt-8 justify-center w-auto">
-        {todoArray.map((item, index: number) => (
-          <div key={index} className={`mt-2 w-72 mx-auto border flex`}></div>
+        {todoArray.map((item, index) => (
+          <div key={index} className={`mt-2 w-72 mx-auto border flex relative`}>
+            <div
+              className={`w-[290px] pl-1 ${line && "line-through"}`}
+              onClick={() => setLine(!line)}
+            >
+              {item}
+            </div>
+            <div className={`${!item && "hidden"}`}>
+              <FaTrashAlt
+                className="mx-[235px] my-1 absolute right-[64px]"
+                onClick={() => {
+                  setCurrent(index);
+                  todoArray.map((itme, index) => {
+                    if (index !== current) arr.push(itme);
+                  });
+                  setTodoArr(arr);
+                  console.log(current);
+                }}
+              />
+            </div>
+          </div>
         ))}
       </div>
     </div>
